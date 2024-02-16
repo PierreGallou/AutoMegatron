@@ -14,4 +14,9 @@ public class Point {
     public double getX() {return X;}
     public double getY() {return Y;}
     public int getClasse() {return classe;}
+
+
+    public void setX(double x) {X = x;}
+    public void setY(double y) {Y = y;}
+    public void setClasse(int classe) {this.classe = classe;}
 }

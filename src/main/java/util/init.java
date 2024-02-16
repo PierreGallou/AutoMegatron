@@ -64,4 +64,57 @@ public abstract class   init {
         return dataSet;
     }
 
+
+
+
+
+    public static ArrayList<Point> normalizeDataSet(ArrayList<Point> dataSet){
+        // normalisation par loi normale centree reduite (esperance et ecart type)
+
+        double esperanceX=0;
+        double ecartTypeX=0;
+        double esperanceY=0;
+        double ecartTypeY=0;
+
+
+        //on balaye le dataset pour cumuler les esperance de chacun
+    for (int i=0;i<dataSet.size();i++){
+        esperanceX=esperanceX+dataSet.get(i).getX();
+        esperanceY=esperanceY+dataSet.get(i).getY();
+    }
+        esperanceX=esperanceX/dataSet.size();
+        esperanceY=esperanceY/dataSet.size();
+
+        //on balaye le dataset pour cumuler la variance de chacun
+    for (int i=0;i<dataSet.size();i++){
+        ecartTypeX=ecartTypeX+(dataSet.get(i).getX()-esperanceX)*(dataSet.get(i).getX()-esperanceX);
+        ecartTypeY=ecartTypeY+(dataSet.get(i).getY()-esperanceY)*(dataSet.get(i).getY()-esperanceY);
+        }
+        ecartTypeX=ecartTypeX/(dataSet.size()-1);
+        ecartTypeY=ecartTypeY/(dataSet.size()-1);
+
+
+    //conversion variance vers ecart-type
+    ecartTypeX=Math.sqrt(ecartTypeX);
+    ecartTypeY=Math.sqrt(ecartTypeY);
+
+
+    // normalisation du dataset
+    for (int i=0;i<dataSet.size();i++){
+        dataSet.get(i).setX((dataSet.get(i).getX()-esperanceX)/ecartTypeX);
+        dataSet.get(i).setY((dataSet.get(i).getY()-esperanceY)/ecartTypeY);
+        }
+
+
+    System.out.println("esperance X:"+esperanceX+"  ecart type X:"+ecartTypeX);
+    System.out.println("esperance Y:"+esperanceY+"  ecart type Y:"+ecartTypeY);
+
+        return dataSet;
+
+}
+
+
+
+
+
 }

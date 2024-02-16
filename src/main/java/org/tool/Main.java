@@ -9,9 +9,9 @@ import java.util.ArrayList;
 
 public class Main {
 
-    static double alpha=5;
-    static double seuilErr=0.01;
-    static int maxIter=200;
+    static double alpha=0.1;
+    static double seuilErr=0.001;
+    static int maxEpoch=10000;
     static double w1=0;
     static double w2=0;
     static double b=0;
@@ -21,11 +21,11 @@ public class Main {
     public static void main(String[] args) {
         ArrayList<Point> dataSet=new ArrayList<>();
         dataSet= init.initDataSet(dataSet);
-
+//        dataSet=init.normalizeDataSet(dataSet);
 
         double erreur=seuilErr;
         double erreurLocale=0.0;
-        int iter=1;
+        int epoch=1;
 
         double gradw1=0.0;
         double gradw1Local=0.0;
@@ -34,9 +34,8 @@ public class Main {
         double gradb=0.0;
         double gradbLocal=0.0;
 
-        while ((erreur>=seuilErr)&&(iter<=maxIter))
+        while ((erreur>=seuilErr)&&(epoch<=maxEpoch))
             {
-
 
                 erreur=0.0; // init erreur
                 gradw1=0.0;
@@ -97,8 +96,8 @@ public class Main {
                 b=b-alpha*gradb;
 
 
-                System.out.println("iteration:"+iter+"  erreur global:"+erreur+"  w1:"+w1+"  w2:"+w2+"  b:"+b);
-            iter++;
+                System.out.println("epoque:"+epoch+"  erreur global:"+erreur+"  w1:"+w1+"  w2:"+w2+"  b:"+b);
+                epoch++;
             }
 
 
