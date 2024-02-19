@@ -5,8 +5,11 @@ import java.util.ArrayList;
 public abstract class   init {
 
 
-    public static ArrayList<Point> initDataSet(ArrayList<Point> dataSet){
+    public static ArrayList<Point> initDataSet(){
 
+        ArrayList<Point> dataSet=new ArrayList<>();
+
+        //dataset 1
         dataSet.add(new Point(0.2,0.5,0));
         dataSet.add(new Point(0.8,1.2,0));
         dataSet.add(new Point(1.3,1,0));
@@ -14,7 +17,6 @@ public abstract class   init {
         dataSet.add(new Point(2,1.2,0));
         dataSet.add(new Point(2.2,1.5,0));
         dataSet.add(new Point(2.5,2,0));
-
         dataSet.add(new Point(0.1,2.1,1));
         dataSet.add(new Point(0.6,2.5,1));
         dataSet.add(new Point(1.1,3.2,1));
@@ -23,6 +25,8 @@ public abstract class   init {
         dataSet.add(new Point(2,3.4,1));
         dataSet.add(new Point(2.6,4,1));
 
+
+        //dataset 2
 //        dataSet.add(new Point(319.0,-51.0,1));
 //        dataSet.add(new Point(307.0,-37.0,1));
 //        dataSet.add(new Point(220.0,-18.0,1));
@@ -78,17 +82,17 @@ public abstract class   init {
 
 
         //on balaye le dataset pour cumuler les esperance de chacun
-    for (int i=0;i<dataSet.size();i++){
-        esperanceX=esperanceX+dataSet.get(i).getX();
-        esperanceY=esperanceY+dataSet.get(i).getY();
-    }
+        for (Point point : dataSet) {
+            esperanceX = esperanceX + point.getX();
+            esperanceY = esperanceY + point.getY();
+        }
         esperanceX=esperanceX/dataSet.size();
         esperanceY=esperanceY/dataSet.size();
 
         //on balaye le dataset pour cumuler la variance de chacun
-    for (int i=0;i<dataSet.size();i++){
-        ecartTypeX=ecartTypeX+(dataSet.get(i).getX()-esperanceX)*(dataSet.get(i).getX()-esperanceX);
-        ecartTypeY=ecartTypeY+(dataSet.get(i).getY()-esperanceY)*(dataSet.get(i).getY()-esperanceY);
+        for (Point point : dataSet) {
+            ecartTypeX = ecartTypeX + (point.getX() - esperanceX) * (point.getX() - esperanceX);
+            ecartTypeY = ecartTypeY + (point.getY() - esperanceY) * (point.getY() - esperanceY);
         }
         ecartTypeX=ecartTypeX/(dataSet.size()-1);
         ecartTypeY=ecartTypeY/(dataSet.size()-1);
@@ -100,9 +104,9 @@ public abstract class   init {
 
 
     // normalisation du dataset
-    for (int i=0;i<dataSet.size();i++){
-        dataSet.get(i).setX((dataSet.get(i).getX()-esperanceX)/ecartTypeX);
-        dataSet.get(i).setY((dataSet.get(i).getY()-esperanceY)/ecartTypeY);
+        for (Point point : dataSet) {
+            point.setX((point.getX() - esperanceX) / ecartTypeX);
+            point.setY((point.getY() - esperanceY) / ecartTypeY);
         }
 
 

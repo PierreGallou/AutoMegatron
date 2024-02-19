@@ -1,6 +1,7 @@
 package org.tool;
 
 import POJO.Point;
+import util.calculGrad;
 import util.init;
 
 import java.util.ArrayList;
@@ -9,78 +10,45 @@ import java.util.ArrayList;
 
 public class Main {
 
-    static double alpha=0.1;
-    static double seuilErr=0.001;
-    static int maxEpoch=10000;
-    static double w1=0;
-    static double w2=0;
-    static double b=0;
+   final static double alpha=0.1;
+   final static double seuilErr=0.2;
+   final static int maxEpoch=100;
+   static double w1=-1;
+   static double w2=-1;
+   static double b=-1;
 
 
 
     public static void main(String[] args) {
-        ArrayList<Point> dataSet=new ArrayList<>();
-        dataSet= init.initDataSet(dataSet);
+
+        ArrayList<Point> dataSet= init.initDataSet();
 //        dataSet=init.normalizeDataSet(dataSet);
 
         double erreur=seuilErr;
-        double erreurLocale=0.0;
         int epoch=1;
 
-        double gradw1=0.0;
-        double gradw1Local=0.0;
-        double gradw2=0.0;
-        double gradw2Local=0.0;
-        double gradb=0.0;
-        double gradbLocal=0.0;
+        double gradw1;
+        double gradw2;
+        double gradb;
 
         while ((erreur>=seuilErr)&&(epoch<=maxEpoch))
             {
 
-                erreur=0.0; // init erreur
+
+            // calculer E
+           erreur= calculGrad.calcErreur(dataSet,w1,w2,b);
+
+
+
+            // calculer le grad de E
                 gradw1=0.0;
                 gradw2=0.0;
                 gradb=0.0;
 
-            // calculer E
-            for (int i=0; i<dataSet.size();i++){
-                erreurLocale= (  dataSet.get(i).getClasse()  - ( 1/(1+Math.exp(  -(dataSet.get(i).getX()*w1+dataSet.get(i).getY()*w2+b)   )  )   )   );
-                erreurLocale=erreurLocale*erreurLocale;
-                erreur=erreur+erreurLocale;
-            }
-            erreur=erreur/dataSet.size();   //moyenne
-
-
-            // calculer le grad E
                 for (int i=0; i<dataSet.size();i++){
-                    gradw1Local= (-2*dataSet.get(i).getX())
-                            *
-                            (dataSet.get(i).getClasse()-1/(1+Math.exp(-b-dataSet.get(i).getX()*w1-dataSet.get(i).getY()*w2)))
-                            *
-                            (Math.exp(-b-dataSet.get(i).getX()*w1-dataSet.get(i).getY()*w2))
-                            /
-                            Math.pow((1+ Math.exp(-b-dataSet.get(i).getX()*w1-dataSet.get(i).getY()*w2)),2);
-                    gradw1=gradw1+gradw1Local;
-
-
-                    gradw2Local= (-2*dataSet.get(i).getY())
-                            *
-                            (dataSet.get(i).getClasse()-1/(1+Math.exp(-b-dataSet.get(i).getX()*w1-dataSet.get(i).getY()*w2)))
-                            *
-                            (Math.exp(-b-dataSet.get(i).getX()*w1-dataSet.get(i).getY()*w2))
-                            /
-                            Math.pow((1+ Math.exp(-b-dataSet.get(i).getX()*w1-dataSet.get(i).getY()*w2)),2);
-                    gradw2=gradw2+gradw2Local;
-
-
-                    gradbLocal= (-2)
-                            *
-                            (dataSet.get(i).getClasse()-1/(1+Math.exp(-b-dataSet.get(i).getX()*w1-dataSet.get(i).getY()*w2)))
-                            *
-                            (Math.exp(-b-dataSet.get(i).getX()*w1-dataSet.get(i).getY()*w2))
-                            /
-                            Math.pow((1+ Math.exp(-b-dataSet.get(i).getX()*w1-dataSet.get(i).getY()*w2)),2);
-                    gradb=gradb+gradbLocal;
+                    gradw1=gradw1+calculGrad.calcGradW1Local(dataSet,i,w1,w2,b);
+                    gradw2=gradw2+calculGrad.calcGradW2Local(dataSet,i,w1,w2,b);
+                    gradb=gradb+calculGrad.calcGradBLocal(dataSet,i,w1,w2,b);
                 }
 
                 gradw1=gradw1/dataSet.size();
@@ -89,8 +57,7 @@ public class Main {
 
 
 
-            // evoluer les param
-
+            // mise a jour des parametres
                 w1=w1-alpha*gradw1;
                 w2=w2-alpha*gradw2;
                 b=b-alpha*gradb;
